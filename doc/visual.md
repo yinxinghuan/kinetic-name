@@ -43,3 +43,7 @@ Do not add a countdown, score, generic particle overlay, glowing card UI, emoji 
 ## Vertical-slice Acceptance
 
 At 390×844 and 320×568, the first touch visibly rotates to a real shader state, all four locks are reachable, completion permits drag, and restart returns to the first state without refresh.
+
+## Startup Continuity
+
+Critical inline CSS paints a black kinetic-type bridge before the module, identity request, font atlases, or shaders load. Its skewed outline uses this game's geometry language and blocks accidental early input. It fades only after all four meshes exist and a WebGL frame has rendered; there is no fixed splash duration.

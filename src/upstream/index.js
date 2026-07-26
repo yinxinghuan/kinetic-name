@@ -19,6 +19,17 @@ export function createKineticName(name, onLocked) {
     type.init(option)
   })
 
+  const ready = new Promise((resolve) => {
+    const waitForMeshes = () => {
+      if (Gl.scene.children.length >= options.length) {
+        requestAnimationFrame(() => resolve())
+        return
+      }
+      requestAnimationFrame(waitForMeshes)
+    }
+    waitForMeshes()
+  })
+
   const canvas = Gl.renderer.domElement
   const turnTo = (next) => {
     if (next === current) return
@@ -47,6 +58,7 @@ export function createKineticName(name, onLocked) {
   })
   canvas.addEventListener('pointerup', () => { dragging = false })
   return {
+    ready,
     reset() {
       locked = 0
       current = 0

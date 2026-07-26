@@ -20,3 +20,7 @@ Vite 6 + TypeScript、Three.js 0.115、GSAP 和 `three-bmfont-text` 2.3。渲染
 ## 4. 扩展点
 
 调整四套原作视觉请改 `src/upstream/options.js` 和 `src/upstream/gl/shaders.js`，但必须重新做视觉基线 QA。更改闭环或手势请改 `src/upstream/index.js`；本地化 copy 在 `index.html` 和 `src/main.ts`；平台身份逻辑只在 `src/main.ts` 调整并保持 bridge 合同不变。发布资产、署名和 meta 分别在 `public/`、`README.md` 与 `meta.json`。
+
+## 5. 启动交接
+
+`index.html` 内联最小启动桥，避免 Vite 模块、身份接口及字体图集抵达前出现空白。`createKineticName()` 暴露 `ready` Promise，等四个 `Type` mesh 全部进入 scene，再由下一帧设置 `body[data-visual-ready=true]` 并淡出启动桥。QA 在受控 420ms 资源延迟下验证两档手机尺寸。

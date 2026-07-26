@@ -6,6 +6,14 @@ import { callAigramAPI, isInAigram, telegramId } from './shared/runtime/bridge'
 ;(window as unknown as { Buffer: typeof Buffer }).Buffer = Buffer
 ;(window as unknown as { THREE: typeof THREE }).THREE = THREE
 
+function handoffFirstFrame() {
+  const boot = document.querySelector<HTMLElement>('.boot-bridge')
+  if (!boot || boot.classList.contains('is-ready')) return
+  document.body.dataset.visualReady = 'true'
+  boot.classList.add('is-ready')
+  window.setTimeout(() => boot.remove(), 420)
+}
+
 void (async () => {
   const locale = localStorage.getItem('game_locale') === 'en'
     || (!localStorage.getItem('game_locale') && !navigator.language.toLowerCase().startsWith('zh'))
@@ -53,6 +61,11 @@ void (async () => {
       restart.hidden = false
     }
   })
+  await Promise.race([
+    app.ready,
+    new Promise((_, reject) => window.setTimeout(() => reject(new Error('Kinetic meshes timed out')), 12000)),
+  ])
+  requestAnimationFrame(handoffFirstFrame)
   restart.addEventListener('pointerdown', () => {
     dots.forEach((dot) => dot.classList.remove('is-lit'))
     hint.textContent = copy.hint
@@ -60,4 +73,11 @@ void (async () => {
     restart.hidden = true
     app.reset()
   })
-})()
+})().catch(() => {
+  const core = document.querySelector<HTMLElement>('.boot-bridge__core')
+  if (core) core.textContent = localeError()
+})
+
+function localeError() {
+  return navigator.language.toLowerCase().startsWith('zh') ? '动态字形载入失败，请刷新重试' : 'Kinetic type failed to load. Please refresh.'
+}
