@@ -18,7 +18,7 @@ for (const [label, width, height] of [['390x844', 390, 844], ['320x568', 320, 56
   const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
   page.on('pageerror', (error) => failures.push(`${label}: ${error.stack || error.message}`))
   await page.goto(`http://127.0.0.1:${port}/?user_name=${encodeURIComponent('林思远ALPHA')}`, {
-    waitUntil: 'networkidle',
+    waitUntil: 'domcontentloaded',
   })
   await page.screenshot({ path: `${root}/_qa/ui/recheck-entry-cjk-${label}.png` })
   for (let index = 0; index < 4; index += 1) {
@@ -28,6 +28,34 @@ for (const [label, width, height] of [['390x844', 390, 844], ['320x568', 320, 56
   await page.waitForTimeout(1150)
   await page.screenshot({ path: `${root}/_qa/ui/recheck-completed-cjk-${label}.png` })
   await page.close()
+
+  const platformPage = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
+  platformPage.on('pageerror', (error) => failures.push(`${label} platform: ${error.stack || error.message}`))
+  await platformPage.addInitScript(() => {
+    Object.defineProperty(window, 'webkit', {
+      configurable: true,
+      value: { messageHandlers: { aigram: { postMessage(message) {
+        if (typeof message !== 'string' || !message.startsWith('callAPI-')) return
+        const payload = JSON.parse(atob(message.slice('callAPI-'.length)))
+        setTimeout(() => {
+          const callback = window[`__aigram_cb_${payload.request_id.replaceAll('-', '_')}`]
+          callback?.(JSON.stringify({
+            request_id: payload.request_id,
+            success: true,
+            data: { data: { name: '平台林思远', head_url: '' } },
+          }))
+        }, 30)
+      } } } },
+    })
+  })
+  await platformPage.goto(`http://127.0.0.1:${port}/?api_origin=https%3A%2F%2Faigram.app&telegram_id=739201`, {
+    waitUntil: 'domcontentloaded',
+  })
+  await platformPage.waitForFunction(() => document.body.dataset.visualReady === 'true')
+  const platformName = await platformPage.locator('#word').textContent()
+  if (platformName !== '平台林思远') failures.push(`${label} platform: wrong identity ${platformName}`)
+  await platformPage.screenshot({ path: `${root}/_qa/ui/platform-name-${label}.png` })
+  await platformPage.close()
 }
 await browser.close()
 server.kill('SIGTERM')

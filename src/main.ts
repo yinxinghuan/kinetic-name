@@ -39,7 +39,7 @@ void (async () => {
         `/note/telegram/user/get/info/by/telegram_id?telegram_id=${telegramId}`,
         'GET',
       )
-      if (profile.retcode === 0) platformName = profile.data?.name || profile.data?.user_name || ''
+      platformName = profile?.data?.name?.trim() || profile?.data?.user_name?.trim() || ''
     } catch {
       // The product fallback is deliberately visible rather than a guessed identity.
     }
