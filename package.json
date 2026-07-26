@@ -1,0 +1,22 @@
+{
+  "name": "kinetic-name",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "gsap": "^3.13.0",
+    "load-bmfont": "^1.4.1",
+    "three": "^0.115.0",
+    "three-bmfont-text": "^2.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1"
+  }
+}

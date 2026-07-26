@@ -1,0 +1,19 @@
+:root { color: #f6f4ee; background: #090a10; font-family: Inter, ui-sans-serif, system-ui, "PingFang SC", sans-serif; }
+* { box-sizing: border-box; }
+html, body, #app { width: 100%; min-height: 100%; margin: 0; overflow: hidden; }
+#webgl, #webgl canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; }
+.shell { position: fixed; z-index: 2; left: max(20px, env(safe-area-inset-left)); right: max(20px, env(safe-area-inset-right)); bottom: max(28px, calc(env(safe-area-inset-bottom) + 12px)); text-align: center; pointer-events: none; }
+.eyebrow { margin: 0 0 10px; font: 700 11px/1.2 ui-monospace, monospace; letter-spacing: .19em; opacity: .7; }
+h1 { margin: 0; font-size: clamp(28px, 9vw, 48px); line-height: 1; letter-spacing: -.06em; word-break: break-word; }
+#hint { max-width: 280px; margin: 12px auto 0; font-size: 16px; line-height: 1.5; }
+.shell.is-complete #hint { text-shadow: 0 2px 4px #090a10, 0 0 2px #090a10; }
+.steps { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+.steps i { width: 8px; height: 8px; border: 1px solid currentColor; border-radius: 50%; opacity: .42; transition: .2s ease; }
+.steps i.is-lit { background: currentColor; opacity: 1; transform: scale(1.35); }
+button { pointer-events: auto; min-width: 132px; min-height: 44px; border: 1px solid currentColor; background: #090a10; color: inherit; margin-top: 18px; padding: 10px 16px; font: inherit; }
+button:active { transform: scale(.97); }
+@media (max-height: 620px) {
+  .shell.is-complete h1 { display: none; }
+  .shell.is-complete #hint { max-width: 300px; margin-top: 0; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
