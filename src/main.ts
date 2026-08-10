@@ -1,7 +1,7 @@
 import './style.css'
 import { Buffer } from 'buffer'
 import * as THREE from 'three'
-import { callAigramAPI, isInAigram, telegramId } from './shared/runtime/bridge'
+import { callAigramAPI, isInAigramNow, getTelegramId } from './shared/runtime/bridge'
 
 ;(window as unknown as { Buffer: typeof Buffer }).Buffer = Buffer
 ;(window as unknown as { THREE: typeof THREE }).THREE = THREE
@@ -33,10 +33,10 @@ void (async () => {
   const { createKineticName } = await import('./upstream/index')
   const nameFromQuery = new URLSearchParams(location.search).get('user_name')
   let platformName = ''
-  if (!nameFromQuery && isInAigram && telegramId) {
+  if (!nameFromQuery && isInAigramNow() && getTelegramId()!) {
     try {
       const profile = await callAigramAPI<{ retcode: number; data?: { name?: string; user_name?: string } }>(
-        `/note/telegram/user/get/info/by/telegram_id?telegram_id=${telegramId}`,
+        `/note/telegram/user/get/info/by/telegram_id?telegram_id=${getTelegramId()!}`,
         'GET',
       )
       platformName = profile?.data?.name?.trim() || profile?.data?.user_name?.trim() || ''
