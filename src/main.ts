@@ -15,8 +15,8 @@ function handoffFirstFrame() {
 }
 
 void (async () => {
-  const locale = localStorage.getItem('game_locale') === 'en'
-    || (!localStorage.getItem('game_locale') && !navigator.language.toLowerCase().startsWith('zh'))
+  const locale = alteruLocalStorage.getItem('game_locale') === 'en'
+    || (!alteruLocalStorage.getItem('game_locale') && !navigator.language.toLowerCase().startsWith('zh'))
     ? 'en'
     : 'zh'
   const copy = locale === 'zh'
